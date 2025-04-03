@@ -44,9 +44,12 @@ process_url = "http://10.0.5.56:30080/process_neck_head"
 FASTAPI_SERVER_URL = "http://10.0.5.56:8000/upload_image"
 
 # 웹캠 열기 (기본 카메라 장치 0번 사용)
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
 if not cap.isOpened():
-    raise RuntimeError("카메라를 열 수 없습니다.")
+    print("0번 카메라 열기 실패, 1번 카메라 시도")
+    cap = cv2.VideoCapture(1, cv2.CAP_V4L2)
+    if not cap.isOpened():
+        raise RuntimeError("카메라를 열 수 없습니다.")
 
 print("실시간 카메라 스트림 시작 (0.5초마다 neck-head 서버 전송, 20fps로 FastAPI 서버에 이미지 전송)")
 
